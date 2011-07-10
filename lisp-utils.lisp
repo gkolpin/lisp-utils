@@ -65,3 +65,12 @@
 (defmacro bind-nil (vars &body body)
   `(let ,(mapcar #'(lambda (var) `(,var nil)) vars)
      ,@body))
+
+(defmacro self-ref (sym &body body)
+  (with-gensyms (body-result eval-body-fn)
+    `(let ((,body-result))
+       (labels ((,eval-body-fn () ,@body)
+		(,sym () ,body-result))
+	 (setf ,body-result (,eval-body-fn))
+	 ,body-result))))
+  

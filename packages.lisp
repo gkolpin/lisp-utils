@@ -14,4 +14,5 @@
 	   #:limit
 	   #:set-conc
 	   #:bind-nil
+	   #:self-ref
 	   #:it))
