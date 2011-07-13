@@ -73,4 +73,24 @@
 		(,sym () ,body-result))
 	 (setf ,body-result (,eval-body-fn))
 	 ,body-result))))
-  
+
+(defun alast (array)
+  (let ((len (length array)))
+    (when (> len 0)
+      (aref array (- (length array) 1)))))
+
+(defun afirst (array)
+  (when (> (length array) 0)
+    (aref array 0)))
+
+(defmacro doarray ((var array &optional result) &body body)
+  `(progn
+     (loop for ,var across ,array do 
+	  ,@body)
+     ,result))
+
+(defun gvector (&rest elements)
+  (let ((array (make-array 0 :adjustable t :fill-pointer 0)))
+    (dolist (element elements)
+      (vector-push-extend element array))
+    array))
