@@ -94,3 +94,37 @@
     (dolist (element elements)
       (vector-push-extend element array))
     array))
+
+(defun action-name (action)
+  (first action))
+
+(defun action-args (action)
+  (second action))
+
+(defun action-fn (action)
+  (cddr action))
+
+(defmacro def-fn-obj (name lambda-list &rest actions)
+  (with-gensyms (dispatch-fn)
+    `(defun ,(cat-symbols 'create- name) ,(cons '&key lambda-list)
+       (labels (,@(append (mapcar #'(lambda (action)
+				      `(,(action-name action)
+					 ,(action-args action)
+					 ,@(action-fn action)))
+				  actions)
+			  `((,dispatch-fn (sym)
+					  (case sym
+					    ,@(mapcar #'(lambda (action)
+							  `(,(action-name action)
+							     #',(action-name action)))
+						       actions))))))
+	 #',dispatch-fn))))
+
+(defun send-message (obj message &rest args)
+  (let ((action (funcall obj message)))
+    (if args
+	(apply action args)
+	(funcall action))))
+
+(defun get-action (obj action)
+  (funcall obj action))

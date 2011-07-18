@@ -19,4 +19,7 @@
 	   #:alast
 	   #:afirst
 	   #:doarray
-	   #:gvector))
+	   #:gvector
+	   #:def-fn-obj
+	   #:send-message
+	   #:get-action))
