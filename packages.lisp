@@ -13,6 +13,7 @@
 	   #:aand
 	   #:limit
 	   #:set-conc
+	   #:string-conc
 	   #:bind-nil
 	   #:self-ref
 	   #:it
@@ -22,4 +23,5 @@
 	   #:gvector
 	   #:def-fn-obj
 	   #:send-message
-	   #:get-action))
+	   #:get-action
+	   #:curry))

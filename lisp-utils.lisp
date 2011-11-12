@@ -62,6 +62,13 @@
 
 (define-modify-macro set-conc (&rest strings) (lambda (&rest strings) (apply #'concatenate (cons 'string strings))))
 
+(defun string-conc (&rest strings)
+  (apply #'concatenate 'string strings))
+
+(defun curry (fn &rest args)
+  #'(lambda (&rest rest-args)
+      (apply fn (append args rest-args))))
+
 (defmacro bind-nil (vars &body body)
   `(let ,(mapcar #'(lambda (var) `(,var nil)) vars)
      ,@body))
