@@ -102,6 +102,16 @@
       (vector-push-extend element array))
     array))
 
+(defun alist-to-ht (alist)
+  (let ((ht (make-hash-table :test 'equal)))
+    (dolist (association alist)
+      (symbol-macrolet ((hash-location (gethash (car association) ht)))
+	(let ((hash-location-val hash-location))
+	  (cond ((null hash-location-val) (setf hash-location (cdr association)))
+		((atom hash-location-val) (setf hash-location (list (cdr association) hash-location-val)))
+		(t (setf hash-location (cons (cdr association) hash-location-val)))))))
+    ht))
+
 (defun action-name (action)
   (first action))
 

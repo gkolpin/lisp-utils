@@ -24,4 +24,5 @@
 	   #:def-fn-obj
 	   #:send-message
 	   #:get-action
-	   #:curry))
+	   #:curry
+	   #:alist-to-ht))
