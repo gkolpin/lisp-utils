@@ -25,4 +25,5 @@
 	   #:send-message
 	   #:get-action
 	   #:curry
-	   #:alist-to-ht))
+	   #:alist-to-ht
+	   #:limiting-subseq))

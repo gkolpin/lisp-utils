@@ -60,6 +60,9 @@
 		(rec (cons (car rem) built-list) (cdr rem) (- n 1))))))
     (nreverse (rec '() list n))))
 
+(defun limiting-subseq (sequence start &optional end)
+  (subseq sequence start (min (length sequence) end)))
+
 (define-modify-macro set-conc (&rest strings) (lambda (&rest strings) (apply #'concatenate (cons 'string strings))))
 
 (defun string-conc (&rest strings)
