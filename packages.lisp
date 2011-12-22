@@ -1,5 +1,5 @@
 (defpackage :lisp-utils
-  (:use :common-lisp)
+  (:use :common-lisp :unicly)
   (:export #:appendf
 	   #:compose
 	   #:with-gensyms
@@ -26,4 +26,6 @@
 	   #:get-action
 	   #:curry
 	   #:alist-to-ht
-	   #:limiting-subseq))
+	   #:limiting-subseq
+	   #:gen-uuid-str
+	   #:with-atomically-updated-file))

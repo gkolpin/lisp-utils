@@ -115,6 +115,10 @@
 		(t (setf hash-location (cons (cdr association) hash-location-val)))))))
     ht))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; function objects
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun action-name (action)
   (first action))
 
@@ -148,3 +152,22 @@
 
 (defun get-action (obj action)
   (funcall obj action))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun gen-uuid-str ()
+  (write-to-string (unicly:make-v4-uuid)))
+
+(defmacro with-atomically-updated-file ((stream filespec &rest options) &body body)
+  (with-gensyms (file-name pathspec)
+    `(progn
+       (let* ((,file-name (gen-uuid-str))
+	      (,pathspec
+		(merge-pathnames (make-pathname :name ,file-name)
+				 (ensure-directories-exist
+				  (make-pathname :directory 
+						 (append (pathname-directory ,filespec)
+							 '(".update-area")))))))
+	 (with-open-file (,stream ,pathspec ,@options)
+	   ,@body)
+	 (rename-file ,pathspec ,filespec)))))
