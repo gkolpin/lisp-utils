@@ -28,4 +28,5 @@
 	   #:alist-to-ht
 	   #:limiting-subseq
 	   #:gen-uuid-str
-	   #:with-atomically-updated-file))
+	   #:with-atomically-updated-file
+	   #:flatten))

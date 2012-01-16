@@ -18,6 +18,14 @@
     `(let (,@let-list)
        ,@body)))
 
+(defun flatten (lst)
+  (labels ((rec (built remaining)
+	     (cond ((null remaining) built)
+		   ((atom (car remaining)) (rec (cons (car remaining) built) (cdr remaining)))
+		   (t
+		    (rec (rec built (car remaining)) (cdr remaining))))))
+    (nreverse (rec nil lst))))
+
 (defun cat-symbols (&rest symbols)
   (intern (apply #'concatenate (cons 'string (mapcar #'symbol-name symbols)))))
 
