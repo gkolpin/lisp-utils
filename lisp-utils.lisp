@@ -179,3 +179,13 @@
 	 (with-open-file (,stream ,pathspec ,@options)
 	   ,@body)
 	 (rename-file ,pathspec ,filespec)))))
+
+(defun hash-literal-transformer (stream subchar arg)
+  (let ((sexp (read stream t)))
+    (let ((hash-sym (gensym)))
+      `(let ((,hash-sym (make-hash-table)))
+	 ,@(loop for (key val) on sexp by #'cddr collect
+		`(setf (gethash ,key ,hash-sym) ,val))
+	 ,hash-sym))))
+
+(set-dispatch-macro-character #\# #\h #'hash-literal-transformer)
