@@ -189,3 +189,9 @@
 	 ,hash-sym))))
 
 (set-dispatch-macro-character #\# #\h #'hash-literal-transformer)
+
+(defun maphash-to-list (fn ht)
+  (let ((list (list)))
+    (maphash #'(lambda (k v) (push (funcall fn k v) list))
+	     ht)
+    (nreverse list)))

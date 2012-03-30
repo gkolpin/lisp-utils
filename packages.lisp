@@ -29,4 +29,5 @@
 	   #:limiting-subseq
 	   #:gen-uuid-str
 	   #:with-atomically-updated-file
-	   #:flatten))
+	   #:flatten
+	   #:maphash-to-list))
