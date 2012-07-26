@@ -30,4 +30,5 @@
 	   #:gen-uuid-str
 	   #:with-atomically-updated-file
 	   #:flatten
-	   #:maphash-to-list))
+	   #:maphash-to-list
+	   #:avg))

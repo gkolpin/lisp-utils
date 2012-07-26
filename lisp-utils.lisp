@@ -44,6 +44,11 @@
        (incf ,place ,delta)
        ,place-arg)))
 
+(defun avg (&rest nums)
+  (if (null nums)
+      0
+      (/ (apply #'+ nums) (length nums))))
+
 (defmacro awhen (test &body body)
   `(let ((lisp-utils:it ,test))
      (when lisp-utils:it ,@body)))
