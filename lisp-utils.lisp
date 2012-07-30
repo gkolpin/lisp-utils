@@ -18,6 +18,13 @@
     `(let (,@let-list)
        ,@body)))
 
+(defmacro once-only (syms &body body)
+  (let ((sym-names (mapcar #'(lambda (sym) (declare (ignore sym)) (gensym)) syms)))
+    `(let (,@(mapcar #'(lambda (sym-name) `(,sym-name (gensym))) sym-names))
+       `(let (,,@(mapcar #'(lambda (sym-name sym) ``(,,sym-name ,,sym)) sym-names syms))
+	  ,(let (,@(mapcar #'(lambda (sym sym-name) `(,sym ,sym-name)) syms sym-names))
+		,@body)))))
+
 (defun flatten (lst)
   (labels ((rec (built remaining)
 	     (cond ((null remaining) built)

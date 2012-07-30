@@ -31,4 +31,5 @@
 	   #:with-atomically-updated-file
 	   #:flatten
 	   #:maphash-to-list
-	   #:avg))
+	   #:avg
+	   #:once-only))
