@@ -32,4 +32,6 @@
 	   #:flatten
 	   #:maphash-to-list
 	   #:avg
-	   #:once-only))
+	   #:once-only
+	   #:asetf
+	   #:do-destructures))

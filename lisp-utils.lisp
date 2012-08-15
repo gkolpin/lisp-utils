@@ -71,6 +71,23 @@
 	 `(aif ,(first clauses)
 	       (aand ,@(rest clauses))))))
 
+(defmacro asetf (&rest args)
+  (with-gensyms (val)
+    (when args
+      `(let* ((lisp-utils:it ,(first args))
+	      (,val ,(second args)))
+	 (setf ,(first args) ,val)
+	 ,(aif (cddr args)
+	       `(asetf ,@(cddr args))
+	       `,val)))))
+
+(defmacro do-destructures ((lambda-list list) &body body)
+  (once-only (list)
+    (with-gensyms (element-sym)
+      `(dolist (,element-sym ,list)
+	 (destructuring-bind ,lambda-list ,element-sym
+	   ,@body)))))
+
 (defun limit (list n)
   (labels ((rec (built-list rem n)
 	     (cond
