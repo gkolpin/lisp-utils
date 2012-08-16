@@ -45,6 +45,10 @@
 (defun mappend (fn &rest lsts)
   (apply #'append (apply #'mapcar fn lsts)))
 
+(defun remassoc (item alist &rest rest-args)
+  (remove (apply #'assoc item alist rest-args)
+	  alist :test #'equal))
+
 (defmacro pincf (place &optional (delta 1))
   (with-gensyms (place-arg)
     `(let ((,place-arg ,place))
@@ -81,7 +85,7 @@
 	       `(asetf ,@(cddr args))
 	       `,val)))))
 
-(defmacro do-destructures ((lambda-list list) &body body)
+(defmacro do-destructs ((lambda-list list) &body body)
   (once-only (list)
     (with-gensyms (element-sym)
       `(dolist (,element-sym ,list)

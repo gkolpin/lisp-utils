@@ -34,4 +34,5 @@
 	   #:avg
 	   #:once-only
 	   #:asetf
-	   #:do-destructures))
+	   #:do-destructs
+	   #:remassoc))
