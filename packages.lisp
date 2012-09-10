@@ -35,4 +35,5 @@
 	   #:once-only
 	   #:asetf
 	   #:do-destructs
-	   #:remassoc))
+	   #:remassoc
+	   #:abbrev))

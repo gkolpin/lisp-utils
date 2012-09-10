@@ -42,12 +42,44 @@
 (defun remove-nils (list)
   (remove-if-not #'identity list))
 
-(defun mappend (fn &rest lsts)
-  (apply #'append (apply #'mapcar fn lsts)))
+(defun random-elt (list)
+  (elt list (random (length list))))
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defun mappend (fn &rest lsts)
+    (apply #'append (apply #'mapcar fn lsts))))
+
+(defun cross (l1 l2)
+  (mappend #'(lambda (o1)
+	       (mapcar #'(lambda (o2) (list o1 o2)) l2))
+	   l1))
 
 (defun remassoc (item alist &rest rest-args)
   (remove (apply #'assoc item alist rest-args)
 	  alist :test #'equal))
+
+(defmacro abbrev (long short &key body)
+  (with-gensyms (args-sym)
+    `(defmacro ,short (,(if body '&body '&rest) ,args-sym)
+       `(,',long ,@,args-sym))))
+
+(defmacro abbrevs (abbrevs)
+  `(progn
+     ,@(mappend #'(lambda (abbrev)
+		    (list `(abbrev ,@abbrev)
+			  `(export ',(cadr abbrev))))
+		abbrevs)))
+
+(abbrevs ((defparameter defpar)
+	  (multiple-value-bind mvbind :body t)
+	  (destructuring-bind debind :body t)
+	  (defconstant defconst)))
+
+(defmacro defn (name args &body body)
+  (with-gensyms (arg-sym)
+    `(defun ,name (,arg-sym)
+       (debind ,args ,arg-sym
+	       ,@body))))
 
 (defmacro pincf (place &optional (delta 1))
   (with-gensyms (place-arg)
@@ -91,6 +123,12 @@
       `(dolist (,element-sym ,list)
 	 (destructuring-bind ,lambda-list ,element-sym
 	   ,@body)))))
+
+(defmacro d-lambda (lambda-list &body body)
+  (with-gensyms (args-sym)
+    `#'(lambda (&rest ,args-sym)
+	 (destructuring-bind ,lambda-list ,args-sym
+	   ,@body))))
 
 (defun limit (list n)
   (labels ((rec (built-list rem n)
