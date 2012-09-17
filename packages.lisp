@@ -36,4 +36,5 @@
 	   #:asetf
 	   #:do-destructs
 	   #:remassoc
-	   #:abbrev))
+	   #:abbrev
+	   #:d-lambda))
