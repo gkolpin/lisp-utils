@@ -1,5 +1,8 @@
 (defpackage :lisp-utils
-  (:use :common-lisp :unicly)
+  (:use
+   :common-lisp
+   #+:sbcl
+   :unicly)
   (:export #:appendf
 	   #:compose
 	   #:with-gensyms

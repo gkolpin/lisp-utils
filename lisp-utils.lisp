@@ -234,9 +234,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+#+:sbcl
 (defun gen-uuid-str ()
   (write-to-string (unicly:make-v4-uuid)))
 
+#+:sbcl
 (defmacro with-atomically-updated-file ((stream filespec &rest options) &body body)
   (with-gensyms (file-name pathspec)
     `(progn
