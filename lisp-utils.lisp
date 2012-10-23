@@ -36,6 +36,12 @@
 (defun cat-symbols (&rest symbols)
   (intern (apply #'concatenate (cons 'string (mapcar #'symbol-name symbols)))))
 
+(defun symb (&rest symbols)
+  (intern
+   (with-output-to-string (s)
+     (dolist (symb symbols)
+       (princ symb s)))))
+
 (defun to-keyword (symbol)
   (intern (symbol-name symbol) :keyword))
 
@@ -268,3 +274,31 @@
     (maphash #'(lambda (k v) (push (funcall fn k v) list))
 	     ht)
     (nreverse list)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @ccessor macro
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun @ccessor-sym-p (sym prefixes)
+  (some #'(lambda (prefix)
+	    (eql (search (write-to-string (symb prefix '@))
+			 (write-to-string sym))
+		 0))
+	prefixes))
+
+(defun get-fetcher (@-sym)
+  (let* ((symstr (write-to-string @-sym))
+	 (place (intern (subseq symstr 0 (position #\@ symstr))))
+	 (ind (intern (subseq symstr (1+ (position #\@ symstr))))))
+    `(,ind ,place)))
+
+(defmacro with-@ccessors ((&rest vars) &body body)
+  (when (notevery #'symbolp vars) (error "~a contains a non-atomic symbol" vars))
+  (let ((@ccessor-syms (remove-duplicates
+			(remove-if-not #'(lambda (atom)
+					   (@ccessor-sym-p atom vars))
+				       (flatten body)))))
+    `(symbol-macrolet ,(mapcar #'(lambda (@-sym)
+				   (list @-sym (get-fetcher @-sym)))
+			       @ccessor-syms)
+       ,@body)))

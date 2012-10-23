@@ -40,4 +40,5 @@
 	   #:do-destructs
 	   #:remassoc
 	   #:abbrev
-	   #:d-lambda))
+	   #:d-lambda
+	   #:with-@ccessors))
