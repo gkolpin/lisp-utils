@@ -41,4 +41,5 @@
 	   #:remassoc
 	   #:abbrev
 	   #:d-lambda
-	   #:with-@ccessors))
+	   #:with-@ccessors
+	   #:symb))
