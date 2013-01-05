@@ -293,19 +293,24 @@
 		 0))
 	prefixes))
 
-(defun get-fetcher (@-sym)
-  (let* ((symstr (write-to-string @-sym))
-	 (place (intern (subseq symstr 0 (position #\@ symstr))))
-	 (ind (intern (subseq symstr (1+ (position #\@ symstr))))))
-    `(,ind ,place)))
+(defun get-fetcher (acc-sym template)
+  ;; TODO - can the eval be removed below???
+  (eval `(let* ((symstr (write-to-string ',acc-sym))
+		(place (intern (subseq symstr 0 (position #\@ symstr))))
+		(ind (intern (subseq symstr (1+ (position #\@ symstr))))))
+	   ,template)))
 
-(defmacro with-@ccessors ((&rest vars) &body body)
+(defmacro with-@ccessors ((&rest vars) fetcher &body body)
+  "fetcher example: ``,(getf ,place ',ind)"
   (when (notevery #'symbolp vars) (error "~a contains a non-atomic symbol" vars))
   (let ((@ccessor-syms (remove-duplicates
 			(remove-if-not #'(lambda (atom)
 					   (@ccessor-sym-p atom vars))
 				       (flatten body)))))
     `(symbol-macrolet ,(mapcar #'(lambda (@-sym)
-				   (list @-sym (get-fetcher @-sym)))
+				   (list @-sym
+					 (if fetcher
+					     (get-fetcher @-sym fetcher)
+					     (get-fetcher @-sym ``(,ind ,place)))))
 			       @ccessor-syms)
        ,@body)))
