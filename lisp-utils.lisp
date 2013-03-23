@@ -296,8 +296,8 @@
 (defun get-fetcher (acc-sym template)
   ;; TODO - can the eval be removed below???
   (eval `(let* ((symstr (write-to-string ',acc-sym))
-		(place (intern (subseq symstr 0 (position #\@ symstr))))
-		(ind (intern (subseq symstr (1+ (position #\@ symstr))))))
+		(place (intern (subseq symstr 0 (position #\@ symstr :from-end t))))
+		(ind (intern (subseq symstr (1+ (position #\@ symstr :from-end t))))))
 	   ,template)))
 
 (defmacro with-@ccessors ((&rest vars) fetcher &body body)
@@ -314,3 +314,10 @@
 					     (get-fetcher @-sym ``(,ind ,place)))))
 			       @ccessor-syms)
        ,@body)))
+
+(defmacro with-@ccessors* ((&rest vars) fetcher &body body)
+  "example: (with-@ccessors* (student student@homeroom-teacher) <fetcher> student@homeroom-teacher@last-name)"
+  (if vars
+    `(with-@ccessors (,(car vars)) ,fetcher
+       (with-@ccessors* ,(rest vars) ,fetcher ,@body))
+    `(progn ,@body)))

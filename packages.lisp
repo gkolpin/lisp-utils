@@ -42,6 +42,7 @@
 	   #:abbrev
 	   #:d-lambda
 	   #:with-@ccessors
+	   #:with-@ccessors*
 	   #:symb
 	   #:place
 	   #:ind))
