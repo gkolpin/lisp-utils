@@ -2,6 +2,6 @@
   :description "lisp-utils: A collection of lisp utilities"
   :version "0.01"
   :author "Garrett Kolpin <gkolpin@gmail.com>"
-  :depends-on (#+:sbcl unicly)
+  :depends-on (cl-fad osicat #+:sbcl unicly)
   :components ((:file "lisp-utils" :depends-on ("packages"))
 	       (:file "packages")))

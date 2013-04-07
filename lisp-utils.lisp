@@ -269,7 +269,7 @@
 (defun hash-literal-transformer (stream subchar arg)
   (let ((sexp (read stream t)))
     (let ((hash-sym (gensym)))
-      `(let ((,hash-sym (make-hash-table)))
+      `(let ((,hash-sym (make-hash-table :test 'equal)))
 	 ,@(loop for (key val) on sexp by #'cddr collect
 		`(setf (gethash ,key ,hash-sym) ,val))
 	 ,hash-sym))))
@@ -321,3 +321,24 @@
     `(with-@ccessors (,(car vars)) ,fetcher
        (with-@ccessors* ,(rest vars) ,fetcher ,@body))
     `(progn ,@body)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; environment reader char
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar *prop-file-path* nil)
+(defun get-property-val (property)
+  (assert (stringp property))
+  (aif (osicat:environment-variable property)
+       (with-input-from-string (s it)
+	 (read s))
+       (when *prop-file-path*
+	 (with-open-file (s (cl-fad:pathname-as-file *prop-file-path*))
+	   (gethash property (eval (read s)))))))
+
+(defun env-literal-transformer (stream subchar arg)
+  (declare (ignore subchar arg))
+  (let ((str (read stream t)))
+    `(get-property-val ,str)))
+
+(set-dispatch-macro-character #\# #\e #'env-literal-transformer)

@@ -45,4 +45,5 @@
 	   #:with-@ccessors*
 	   #:symb
 	   #:place
-	   #:ind))
+	   #:ind
+	   #:*prop-file-path*))
