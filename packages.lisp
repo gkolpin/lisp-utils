@@ -46,4 +46,5 @@
 	   #:symb
 	   #:place
 	   #:ind
-	   #:*prop-file-path*))
+	   #:*prop-file-path*
+	   #:do-tree))

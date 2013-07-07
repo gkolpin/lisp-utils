@@ -342,3 +342,19 @@
     `(get-property-val ,str)))
 
 (set-dispatch-macro-character #\# #\e #'env-literal-transformer)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; do-tree
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun do-tree (predicate replacer-fn tree)
+  (labels ((aux (processed tree)
+	     (cond ((null tree) (nreverse processed))
+		   ((and (car tree) (atom (car tree)))
+		    (if (funcall predicate (car tree))
+			(aux (cons (funcall replacer-fn (car tree)) processed) (cdr tree))
+			(aux (cons (car tree) processed) (cdr tree))))
+		   ((car tree)
+		    (aux (cons (aux '() (car tree)) processed) (cdr tree)))
+		   (t (aux (cons (car tree) processed) (cdr tree))))))
+    (aux '() tree)))
