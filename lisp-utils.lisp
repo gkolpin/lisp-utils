@@ -207,6 +207,13 @@
 		(t (setf hash-location (cons (cdr association) hash-location-val)))))))
     ht))
 
+(defmacro all-case (keyform &body cases)
+  (with-gensyms (keyform-sym)
+    `(let ((,keyform-sym ,keyform))
+       ,@(loop for case in cases collect
+	      `(case ,keyform-sym
+		 ,case)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; function objects
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

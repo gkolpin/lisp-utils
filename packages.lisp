@@ -47,4 +47,5 @@
 	   #:place
 	   #:ind
 	   #:*prop-file-path*
-	   #:do-tree))
+	   #:do-tree
+	   #:all-case))
